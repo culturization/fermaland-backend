@@ -9,7 +9,6 @@
 #include <string>
 
 #include "helpers.hpp"
-#include "context.hpp"
 
 struct RouteKey {
   const method_t method;
@@ -20,7 +19,7 @@ bool operator<(const RouteKey& route1, const RouteKey& route2);
 
 class Router {
 public:
-  Router(AppContext& context) : context(context) {};
+  Router() {};
 
   inline void register_handler(RouteKey key, request_handler_t handler) {
     simple_routes[key] = handler;
@@ -33,7 +32,6 @@ public:
   boost::asio::awaitable<response_t> route(const method_t method, const std::string& raw_path, request_t& request);
   bool compare_with_mask(RouteKey& route, RouteKey& mask, std::vector<std::string>& arguments);
 private:
-  AppContext& context;
   std::map<RouteKey, request_handler_t> simple_routes;
   std::vector<std::pair<RouteKey, complex_request_handler_t>> complex_routes;
 };

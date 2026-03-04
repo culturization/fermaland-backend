@@ -20,7 +20,7 @@ boost::asio::awaitable<response_t> Router::route(const method_t method, const st
 
   if (auto it = simple_routes.find(route); it != simple_routes.end()) {
     auto func = it->second;
-    co_return co_await func(request, context);
+    co_return co_await func(request);
   } else {
     std::vector<std::string> arguments;
 
@@ -38,7 +38,7 @@ boost::asio::awaitable<response_t> Router::route(const method_t method, const st
     }
 
     if (found) {
-      co_return co_await handler(request, context, std::move(arguments));
+      co_return co_await handler(request, std::move(arguments));
     } else {
       co_return return_http_error(boost::beast::http::status::not_found, "Not found");
     }

@@ -11,16 +11,14 @@
 #include <iostream>
 #include "context.hpp"
 
-#define ENDPOINT(name) auto name = [](request_t& request, AppContext& ctx) -> boost::asio::awaitable<response_t> 
-#define REGISTER_ENDPOINT(method, path, name) router.register_handler({ method, path }, name);
-#define MASK_ENDPOINT(name) auto name = [](request_t& request, AppContext& ctx, std::vector<std::string>) -> boost::asio::awaitable<response_t> 
-#define REGISTER_MASK_ENDPOINT(method, path, name) router.register_mask_handler({ method, path }, name);
+#define ENDPOINT [&ctx](request_t& request) -> boost::asio::awaitable<response_t>
+#define MASK_ENDPOINT [&ctx](request_t& request, std::vector<std::string> query) -> boost::asio::awaitable<response_t>
 
 using response_t = boost::beast::http::response<boost::beast::http::string_body>;
 using request_t = boost::beast::http::request<boost::beast::http::string_body>;
 using method_t = boost::beast::http::verb;
-using request_handler_t = std::function<boost::asio::awaitable<response_t>(request_t&, AppContext& ctx)>;
-using complex_request_handler_t = std::function<boost::asio::awaitable<response_t>(request_t&, AppContext& ctx, std::vector<std::string> args)>;
+using request_handler_t = std::function<boost::asio::awaitable<response_t>(request_t&)>;
+using complex_request_handler_t = std::function<boost::asio::awaitable<response_t>(request_t&, std::vector<std::string> query)>;
 
 response_t return_http_error(boost::beast::http::status status_code, const char* message);
 
@@ -44,7 +42,30 @@ inline void json_add_members(rapidjson::Document& json, const char* key, T&& val
 }
 
 template <typename... Args>
-rapidjson::Document generate_json(Args... args);
+rapidjson::Document generate_json(Args... args) {
+  rapidjson::Document json;
+  json.SetObject();
+  json_add_members(json, args...);
+
+  return json;
+}
 
 template <typename... Args>
-response_t send_json(boost::beast::http::status status_code, Args... args);
+response_t send_json(boost::beast::http::status status_code, Args... args) {
+  rapidjson::Document json = generate_json(args...);
+  rapidjson::StringBuffer buffer;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+  json.Accept(writer);
+
+  response_t response { status_code, 11 };
+  response.body() = buffer.GetString();
+
+  return response;
+}
+
+response_t return_http_error(boost::beast::http::status status_code, const char* message) {
+  return send_json(
+    status_code,
+    "error", message
+  );
+}

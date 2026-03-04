@@ -6,7 +6,7 @@ void HTTPBaseServer::open() {
   const int threads_num = std::thread::hardware_concurrency();
 
   asio::io_context io { threads_num };
-  asio::co_spawn(io, listen(), HANDLE_EXCEPTION);
+  asio::co_spawn(io, listen(), handle_exception_l);
 
   std::vector<std::thread> threads;
   threads.reserve(threads_num);
@@ -36,7 +36,7 @@ asio::awaitable<void> HTTPBaseServer::listen() {
   while (true) {
     asio::co_spawn(
       executor, handle_connection(beast::tcp_stream { co_await acceptor.async_accept() }),
-      HANDLE_EXCEPTION
+      handle_exception_l
     );
   }
 }

@@ -1,14 +1,13 @@
 #include <boost/beast/http.hpp>
-#include "router.hpp"
-#include "base.hpp"
-#include "app/main/controller.hpp"
+#include "router.cpp"
+#include "base.cpp"
+#include "app/app.hpp"
 #include "context.hpp"
 
 int main() {
   AppContext ctx;
-
-  Router router(ctx);
-  register_main_controller(router);
+  Router router;
+  register_main_controller(router, ctx);
 
   HTTPBaseServer server(router);
   

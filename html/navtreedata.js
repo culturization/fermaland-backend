@@ -25,9 +25,8 @@
 var NAVTREE =
 [
   [ "Fermaland", "index.html", [
-    [ "Classes", "annotated.html", [
-      [ "Class List", "annotated.html", "annotated_dup" ],
-      [ "Class Index", "classes.html", null ]
+    [ "Главная страница", "index.html#autotoc_md0", [
+      [ "Основной контроллер", "index.html#autotoc_md1", null ]
     ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ]
@@ -37,7 +36,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html"
+"app_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

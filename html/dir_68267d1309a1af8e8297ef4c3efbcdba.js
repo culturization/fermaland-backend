@@ -1,8 +1,4 @@
 var dir_68267d1309a1af8e8297ef4c3efbcdba =
 [
-    [ "base.hpp", "base_8hpp_source.html", null ],
-    [ "context.hpp", "context_8hpp_source.html", null ],
-    [ "helpers.hpp", "helpers_8hpp_source.html", null ],
-    [ "router.hpp", "router_8hpp_source.html", null ],
-    [ "uri.hpp", "uri_8hpp_source.html", null ]
+    [ "app", "dir_5194e5fea318fda12687127c23f8aba1.html", "dir_5194e5fea318fda12687127c23f8aba1" ]
 ];

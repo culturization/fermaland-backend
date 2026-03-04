@@ -22,7 +22,7 @@ public:
 
   void open();
   void handle_exception(std::exception_ptr e);
-  #define HANDLE_EXCEPTION [this](auto e) { handle_exception(e); }
+  std::function<void(std::exception_ptr e)> handle_exception_l { [this](std::exception_ptr e) { handle_exception(e); } };
 
   asio::awaitable<void> listen();
   asio::awaitable<void> handle_connection(beast::tcp_stream tcp);
