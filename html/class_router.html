@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Fermaland: src Directory Reference</title>
+<title>Fermaland: Router Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('dir_68267d1309a1af8e8297ef4c3efbcdba.html','',''); });
+$(function(){initNavTree('class_router.html','','class_router-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -95,18 +95,27 @@ $(function(){initNavTree('dir_68267d1309a1af8e8297ef4c3efbcdba.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">src Directory Reference</div></div>
+  <div class="headertitle"><div class="title">Router Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
-Files</h2></td></tr>
-<tr class="memitem:base_2Ehpp" id="r_base_2Ehpp"><td class="memItemLeft"><a href="base_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>base.hpp</b></td></tr>
-<tr class="memitem:context_2Ehpp" id="r_context_2Ehpp"><td class="memItemLeft"><a href="context_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>context.hpp</b></td></tr>
-<tr class="memitem:helpers_2Ehpp" id="r_helpers_2Ehpp"><td class="memItemLeft"><a href="helpers_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>helpers.hpp</b></td></tr>
-<tr class="memitem:router_2Ehpp" id="r_router_2Ehpp"><td class="memItemLeft"><a href="router_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>router.hpp</b></td></tr>
-<tr class="memitem:uri_2Ehpp" id="r_uri_2Ehpp"><td class="memItemLeft"><a href="uri_8hpp_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight"><b>uri.hpp</b></td></tr>
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a714a439c52adbe7c1c55a86c2972cc0b" id="r_a714a439c52adbe7c1c55a86c2972cc0b"><td class="memItemLeft"><a id="a714a439c52adbe7c1c55a86c2972cc0b" name="a714a439c52adbe7c1c55a86c2972cc0b"></a>
+&#160;</td><td class="memItemRight"><b>Router</b> (<a class="el" href="class_app_context.html">AppContext</a> &amp;context)</td></tr>
+<tr class="memitem:a8985ef40c6ec366a2f331f768b4bcb68" id="r_a8985ef40c6ec366a2f331f768b4bcb68"><td class="memItemLeft"><a id="a8985ef40c6ec366a2f331f768b4bcb68" name="a8985ef40c6ec366a2f331f768b4bcb68"></a>
+void&#160;</td><td class="memItemRight"><b>register_handler</b> (<a class="el" href="struct_route_key.html">RouteKey</a> key, request_handler_t handler)</td></tr>
+<tr class="memitem:a958947910c3c7ac11f195db5633b93af" id="r_a958947910c3c7ac11f195db5633b93af"><td class="memItemLeft"><a id="a958947910c3c7ac11f195db5633b93af" name="a958947910c3c7ac11f195db5633b93af"></a>
+void&#160;</td><td class="memItemRight"><b>register_mask_handler</b> (<a class="el" href="struct_route_key.html">RouteKey</a> key, complex_request_handler_t handler)</td></tr>
+<tr class="memitem:a01f26ce4d6da9dc437d0f47a054f6670" id="r_a01f26ce4d6da9dc437d0f47a054f6670"><td class="memItemLeft"><a id="a01f26ce4d6da9dc437d0f47a054f6670" name="a01f26ce4d6da9dc437d0f47a054f6670"></a>
+boost::asio::awaitable&lt; response_t &gt;&#160;</td><td class="memItemRight"><b>route</b> (const method_t method, const std::string &amp;raw_path, request_t &amp;request)</td></tr>
+<tr class="memitem:a4688de149bc1d9ba87dc5abe6a560e35" id="r_a4688de149bc1d9ba87dc5abe6a560e35"><td class="memItemLeft"><a id="a4688de149bc1d9ba87dc5abe6a560e35" name="a4688de149bc1d9ba87dc5abe6a560e35"></a>
+bool&#160;</td><td class="memItemRight"><b>compare_with_mask</b> (<a class="el" href="struct_route_key.html">RouteKey</a> &amp;route, <a class="el" href="struct_route_key.html">RouteKey</a> &amp;mask, std::vector&lt; std::string &gt; &amp;arguments)</td></tr>
 </table>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/<a class="el" href="router_8hpp_source.html">router.hpp</a></li>
+<li>src/<b>router.cpp</b></li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -120,7 +129,7 @@ Files</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>src</b></li>
+    <li class="navelem"><a href="class_router.html">Router</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>
