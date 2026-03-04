@@ -1,0 +1,4 @@
+- [x] Routing
+- [ ] HTTP pipelining
+- [ ] Auth
+- [ ] User profile actions
