@@ -2,10 +2,13 @@
 #include "router.hpp"
 #include "base.hpp"
 #include "app/main/controller.hpp"
+#include "context.hpp"
 
 int main() {
-  Router router;
-  router.register_handler({ boost::beast::http::verb::get, "/hello" }, MainController::hello);
+  AppContext ctx;
+
+  Router router(ctx);
+  register_main_controller(router);
 
   HTTPBaseServer server(router);
   

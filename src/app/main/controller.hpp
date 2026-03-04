@@ -1,10 +1,6 @@
 #pragma once
 #include <boost/asio/awaitable.hpp>
 #include "../../helpers.hpp"
+#include "../../router.hpp"
 
-namespace MainController {
-  /* GET /hello
-   * Returns nothing.
-   */
-  ENDPOINT(hello);
-}
+void register_main_controller(Router& router);

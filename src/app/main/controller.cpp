@@ -1,10 +1,10 @@
 #include "controller.hpp"
 
-namespace MainController {
+void register_main_controller(Router& router) {
+  using namespace boost::beast::http;
+
   ENDPOINT(hello) {
-    co_return send_json(
-      boost::beast::http::status::ok,
-      "123", "456" // TODO: поменять структуру
-    );
-  }
+    co_return send_json(status::ok, "123", "456");
+  };
+  REGISTER_ENDPOINT(verb::get, "/hello", hello);
 }
