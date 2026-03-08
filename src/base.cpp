@@ -4,7 +4,7 @@ void HTTPBaseServer::open(ThreadsManager& tm) {
   asio::ip::address addr = asio::ip::make_address("0.0.0.0");
   const int port = 8000;
 
-  asio::io_context io { tm.threads_size };
+  asio::io_context io { static_cast<int>(tm.threads.size()) };
   asio::co_spawn(io, listen(), handle_exception_l);
   tm.start(io);
 }

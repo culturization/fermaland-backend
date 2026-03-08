@@ -9,11 +9,11 @@ int main() {
   Router router;
   HTTPBaseServer server(router);
   ThreadsManager tm;
-  AppContext ctx(tm);
+  AppContext ctx;
 
   register_main_controller(router, ctx);
 
-  AuthService auth_service;
+  AuthService auth_service(tm.threads.size());
   register_auth_controller(router, ctx, auth_service);
 
   server.open(tm);

@@ -10,6 +10,8 @@
 #include <expected>
 #include <memory>
 
+#include "threads_manager.hpp"
+
 #define SALT_SIZE 16
 #define SECRET_KEY_SIZE 32
 
@@ -27,7 +29,10 @@ enum class AuthError {
 class AuthService {
 public:
   AuthService(int threads_size) {
-    for (auto it = rngs.begin(); it < rngs.end(); it++) rngs.emplace_back(it);
+    rngs.resize(threads_size);
+    for (auto i = 0; i < threads_size; i++) {
+      rngs[i] = std::make_unique<CryptoPP::AutoSeededRandomPool>();
+    }
   }
 
   std::string generate_password_hash(const std::string& pass, const CryptoPP::byte* salt) {
@@ -50,16 +55,16 @@ public:
     return result;
   }
 
-  std::expected<std::string, AuthError> encrypt_token(const unsigned int thread_num, const AuthToken* token) noexcept { // I JUST HOPE IT WON'T THROW EXCEPTIONS
+  std::expected<std::string, AuthError> encrypt_token(const AuthToken* token) noexcept { // I JUST HOPE IT WON'T THROW EXCEPTIONS
     using namespace CryptoPP;
 
     std::string encrypted;
     byte iv[AES::BLOCKSIZE];
-    rngs[thread_num].GenerateBlock(iv, sizeof(iv));
+    rngs[thread_num]->GenerateBlock(iv, sizeof(iv));
 
     try {
       CBC_Mode<AES>::Encryption aes_enc;
-		  aes_enc.SetKeyWithIV(secret_key, SECRET_KEY_SIZE, iv);
+      aes_enc.SetKeyWithIV(secret_key, SECRET_KEY_SIZE, iv);
 
       ArraySource source(reinterpret_cast<const byte*>(token), sizeof(*token), true,
         new StreamTransformationFilter(aes_enc, new Base64Encoder(new StringSink(encrypted)))
@@ -97,7 +102,7 @@ public:
     AuthToken token;
     try {
       CBC_Mode<AES>::Decryption aes_dec;
-		  aes_dec.SetKeyWithIV(secret_key, SECRET_KEY_SIZE, iv);
+      aes_dec.SetKeyWithIV(secret_key, SECRET_KEY_SIZE, iv);
 
       ArraySink token_sink(reinterpret_cast<byte*>(&token), sizeof(token));
       ArraySource(reinterpret_cast<const byte*>(encrypted.data()), pos, true,
@@ -111,17 +116,17 @@ public:
     return token;
   }
 
-  std::expected<std::string, AuthError> generate_token(const unsigned int thread_num, uint64_t user_id) noexcept {
+  std::expected<std::string, AuthError> generate_token(uint64_t user_id) noexcept {
     AuthToken token;
     token.user_id = user_id;
-    rngs[thread_num].GenerateBlock(reinterpret_cast<CryptoPP::byte*>(&token.random), 8);
+    rngs[thread_num]->GenerateBlock(reinterpret_cast<CryptoPP::byte*>(&token.random), 8);
 
-    return encrypt_token(thread_num, &token);
+    return encrypt_token(&token);
   };
 
 private:
   const size_t secret_key_size = 32;
   const CryptoPP::byte secret_key[SECRET_KEY_SIZE + 1] = "OrX4QfIU4wz51hxTzaguX8mDGT3f5gVE";
 
-  std::vector<CryptoPP::AutoSeededRandomPool> rngs;
+  std::vector<std::unique_ptr<CryptoPP::AutoSeededRandomPool>> rngs;
 };

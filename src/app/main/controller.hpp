@@ -1,7 +1,7 @@
 #pragma once
 #include <boost/asio/awaitable.hpp>
-#include "../../helpers.hpp"
-#include "../../router.hpp"
+#include "helpers.hpp"
+#include "router.hpp"
 /** @file main/controller.hpp
  * The main controller.
  */

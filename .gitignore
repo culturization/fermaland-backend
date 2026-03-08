@@ -6,3 +6,4 @@ CMakeCache.txt
 .cache/
 .vscode/
 sqlite.db
+html/

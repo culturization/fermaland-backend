@@ -3,7 +3,6 @@
 
 class AppContext {
 public:
-  AppContext(ThreadsManager& tm) : db("sqlite.db", SQLite::OPEN_READWRITE), tm(tm) {};
+  AppContext() : db("sqlite.db", SQLite::OPEN_READWRITE) {};
   SQLite::Database db;
-  ThreadsManager& tm;
 };
