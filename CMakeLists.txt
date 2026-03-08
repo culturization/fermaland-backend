@@ -7,6 +7,7 @@ project("fermaland")
 include_directories("lib/rapidjson/include")
 include_directories("lib/SQLiteCpp/include")
 add_subdirectory("lib/SQLiteCpp")
+add_subdirectory("lib/cryptopp")
 
 set(Boost_ROOT "C:/Boost")
 find_package(Boost REQUIRED)

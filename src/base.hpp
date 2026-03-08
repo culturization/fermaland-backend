@@ -13,6 +13,7 @@
 #include <cstdio>
 
 #include "router.hpp"
+#include "threads_manager.hpp"
 
 using namespace boost;
 
@@ -20,7 +21,7 @@ class HTTPBaseServer {
 public:
   HTTPBaseServer(Router& router) : endpoint(asio::ip::make_address("0.0.0.0"), 8000), router(router) {}
 
-  void open();
+  void open(ThreadsManager& tm);
   void handle_exception(std::exception_ptr e);
   std::function<void(std::exception_ptr e)> handle_exception_l { [this](std::exception_ptr e) { handle_exception(e); } };
 

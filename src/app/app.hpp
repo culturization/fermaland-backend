@@ -1,4 +1,5 @@
 #include "main/controller.hpp"
+#include "auth/controller.hpp"
 
 /** 
  * @mainpage

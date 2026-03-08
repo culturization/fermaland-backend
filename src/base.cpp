@@ -1,22 +1,12 @@
 #include "base.hpp"
 
-void HTTPBaseServer::open() {
+void HTTPBaseServer::open(ThreadsManager& tm) {
   asio::ip::address addr = asio::ip::make_address("0.0.0.0");
   const int port = 8000;
-  const int threads_num = std::thread::hardware_concurrency();
 
-  asio::io_context io { threads_num };
+  asio::io_context io { tm.threads_size };
   asio::co_spawn(io, listen(), handle_exception_l);
-
-  std::vector<std::thread> threads;
-  threads.reserve(threads_num);
-
-  for (int i = 0; i < threads_num; i++) {
-    threads.emplace_back([&io] { io.run(); });
-  }
-  for (int i = 0; i < threads_num; i++) {
-    threads[i].join();
-  }
+  tm.start(io);
 }
 
 void HTTPBaseServer::handle_exception(std::exception_ptr e) {

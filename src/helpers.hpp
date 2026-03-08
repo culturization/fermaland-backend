@@ -20,8 +20,6 @@ using method_t = boost::beast::http::verb;
 using request_handler_t = std::function<boost::asio::awaitable<response_t>(request_t&)>;
 using complex_request_handler_t = std::function<boost::asio::awaitable<response_t>(request_t&, std::vector<std::string> query)>;
 
-response_t return_http_error(boost::beast::http::status status_code, const char* message);
-
 template <typename T>
 inline void json_add_members(rapidjson::Document& json, const char* key, T&& value) {
   json_add_members(json, key, rapidjson::Value(value));
