@@ -2,6 +2,8 @@
 
 bool operator<(const RouteKey& route1, const RouteKey& route2) { return route1.path < route2.path; }
 
+Router::Router() {};
+
 boost::asio::awaitable<response_t> Router::route(const method_t method, const std::string& raw_path, request_t& request) {
   int pos = 0;
   std::string path;

@@ -19,7 +19,7 @@ using namespace boost;
 
 class HTTPBaseServer {
 public:
-  HTTPBaseServer(Router& router) : endpoint(asio::ip::make_address("0.0.0.0"), 8000), router(router) {}
+  HTTPBaseServer(Router& router);
 
   void open(ThreadsManager& tm);
   void handle_exception(std::exception_ptr e);

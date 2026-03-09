@@ -1,3 +1,4 @@
+#pragma once
 #include "cryptlib.h"
 #include "pwdbased.h"
 #include "sha.h"
@@ -28,76 +29,19 @@ enum class AuthError {
 
 class AuthService {
 public:
-  AuthService(int threads_size) {
-    rngs.resize(threads_size);
-    for (auto i = 0; i < threads_size; i++) {
-      rngs[i] = std::make_unique<CryptoPP::AutoSeededRandomPool>();
-    }
-  }
+  AuthService(int threads_size);
 
-  std::string generate_password_hash(const std::string& pass, const CryptoPP::byte* salt) {
+  void generate_salt(CryptoPP::byte* salt);
+  std::string generate_password_hash(const std::string& pass, const CryptoPP::byte* salt);
+
+  std::expected<std::string, AuthError> generate_token(uint64_t user_id);
+  std::expected<std::string, AuthError> encrypt_token(const AuthToken* token);
+
+  std::expected<AuthToken, AuthError> decrypt_token(const std::string encrypted_string);
+  inline std::expected<AuthToken, AuthError> decrypt_token_first_part(
+    const CryptoPP::byte* encrypted_buf, size_t encrypted_buf_size, const CryptoPP::byte* iv
+  ) {
     using namespace CryptoPP;
-
-    const unsigned int iterations = 100000;
-    const size_t derived_size = 64;
-
-    PKCS5_PBKDF2_HMAC<SHA256> pbkdf;
-    byte derived[derived_size];
-    pbkdf.DeriveKey(
-      derived, derived_size, 0,
-      reinterpret_cast<const byte*>(pass.data()), pass.length(),
-      salt, SALT_SIZE, iterations, 0.0f
-    );
-
-    std::string result;
-    ArraySource source(derived, derived_size, new Base64Encoder(new StringSink(result)));
-
-    return result;
-  }
-
-  std::expected<std::string, AuthError> encrypt_token(const AuthToken* token) noexcept { // I JUST HOPE IT WON'T THROW EXCEPTIONS
-    using namespace CryptoPP;
-
-    std::string encrypted;
-    byte iv[AES::BLOCKSIZE];
-    rngs[thread_num]->GenerateBlock(iv, sizeof(iv));
-
-    try {
-      CBC_Mode<AES>::Encryption aes_enc;
-      aes_enc.SetKeyWithIV(secret_key, SECRET_KEY_SIZE, iv);
-
-      ArraySource source(reinterpret_cast<const byte*>(token), sizeof(*token), true,
-        new StreamTransformationFilter(aes_enc, new Base64Encoder(new StringSink(encrypted)))
-      );
-    } catch (const CryptoPP::Exception) {
-      return std::unexpected(AuthError::CryptoPPError);
-    }
-
-    encrypted.append(".");
-
-    std::string iv_base64;
-    ArraySource source(iv, sizeof(iv), true, new Base64Encoder(new StringSink(iv_base64))); // TODO: optimize it with ArraySink and static buffers
-    encrypted.append(iv_base64);
-
-    return encrypted;
-  }
-
-  std::expected<AuthToken, AuthError> decrypt_token(const std::string encrypted) noexcept {
-    using namespace CryptoPP;
-
-    size_t pos;
-    if ((pos = encrypted.find('.')) == std::string::npos) {
-      return std::unexpected(AuthError::InvalidToken);
-    } else if (encrypted.size() == pos + 1) {
-      return std::unexpected(AuthError::InvalidToken);
-    }
-
-    byte iv[AES::BLOCKSIZE];
-    ArraySink iv_sink(iv, sizeof(iv));
-    ArraySource(reinterpret_cast<const byte*>(encrypted.data() + pos + 1), encrypted.size() - pos - 1, true,
-      new Base64Decoder(new Redirector(iv_sink))
-    );
-    if (iv_sink.TotalPutLength() != sizeof(iv)) return std::unexpected(AuthError::InvalidToken);
 
     AuthToken token;
     try {
@@ -105,7 +49,7 @@ public:
       aes_dec.SetKeyWithIV(secret_key, SECRET_KEY_SIZE, iv);
 
       ArraySink token_sink(reinterpret_cast<byte*>(&token), sizeof(token));
-      ArraySource(reinterpret_cast<const byte*>(encrypted.data()), pos, true,
+      ArraySource(encrypted_buf, encrypted_buf_size, true,
         new Base64Decoder(new StreamTransformationFilter(aes_dec, new Redirector(token_sink)))
       );
       if (token_sink.TotalPutLength() != sizeof(token)) return std::unexpected(AuthError::InvalidToken);
@@ -115,14 +59,6 @@ public:
 
     return token;
   }
-
-  std::expected<std::string, AuthError> generate_token(uint64_t user_id) noexcept {
-    AuthToken token;
-    token.user_id = user_id;
-    rngs[thread_num]->GenerateBlock(reinterpret_cast<CryptoPP::byte*>(&token.random), 8);
-
-    return encrypt_token(&token);
-  };
 
 private:
   const size_t secret_key_size = 32;

@@ -1,6 +1,6 @@
 #include <boost/beast/http.hpp>
-#include "router.cpp"
-#include "base.cpp"
+#include "router.hpp"
+#include "base.hpp"
 #include "app/app.hpp"
 #include "context.hpp"
 #include "threads_manager.hpp"

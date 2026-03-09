@@ -1,4 +1,6 @@
 - [x] Routing
+- [ ] Better routing
+- [ ] JSON IO streaming
 - [ ] HTTP pipelining
 - [ ] Auth
 - [ ] User profile actions

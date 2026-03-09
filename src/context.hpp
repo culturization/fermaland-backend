@@ -3,6 +3,6 @@
 
 class AppContext {
 public:
-  AppContext() : db("sqlite.db", SQLite::OPEN_READWRITE) {};
+  AppContext();
   SQLite::Database db;
 };

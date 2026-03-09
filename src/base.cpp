@@ -1,5 +1,8 @@
 #include "base.hpp"
 
+HTTPBaseServer::HTTPBaseServer(Router& router)
+: endpoint(asio::ip::make_address("0.0.0.0"), 8000), router(router) {}
+
 void HTTPBaseServer::open(ThreadsManager& tm) {
   asio::ip::address addr = asio::ip::make_address("0.0.0.0");
   const int port = 8000;

@@ -9,6 +9,7 @@
 #include <string>
 
 #include "helpers.hpp"
+#include "json.hpp"
 
 struct RouteKey {
   const method_t method;
@@ -19,7 +20,7 @@ bool operator<(const RouteKey& route1, const RouteKey& route2);
 
 class Router {
 public:
-  Router() {};
+  Router();
 
   inline void register_handler(RouteKey key, request_handler_t handler) {
     simple_routes[key] = handler;
